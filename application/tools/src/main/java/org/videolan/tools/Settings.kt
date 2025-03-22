@@ -64,6 +64,10 @@ object Settings : SingletonHolder<SharedPreferences, Context>({ init(it.applicat
         safeMode = prefs.getBoolean(KEY_SAFE_MODE, false) && prefs.getString(KEY_SAFE_MODE_PIN, "")?.isNotBlank() == true
         remoteAccessEnabled.postValue(prefs.getBoolean(KEY_ENABLE_REMOTE_ACCESS, false))
         fastplaySpeed = prefs.getString(FASTPLAY_SPEED, "2")?.toFloat() ?: 2f
+        // ✅ Set default here if not already set
+        if (!prefs.contains(BROWSER_SHOW_ONLY_MULTIMEDIA)) {
+            prefs.edit().putBoolean(BROWSER_SHOW_ONLY_MULTIMEDIA, true).apply()
+        }
         return prefs
     }
 

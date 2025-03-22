@@ -22,6 +22,7 @@ package org.videolan.vlc.gui.video
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.graphics.Typeface
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,6 +36,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.databinding.ViewDataBinding
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import org.videolan.libvlc.util.AndroidUtil
 import org.videolan.medialibrary.Tools
@@ -66,7 +68,10 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
 
     val multiSelectHelper = MultiSelectHelper(this, UPDATE_SELECTION)
 
-   fun updateThumb(media:MediaWrapper) {
+    private var selectedPosition = RecyclerView.NO_POSITION
+
+
+    fun updateThumb(media:MediaWrapper) {
         val position = currentList?.snapshot()?.indexOf(media) ?: return
         (getItem(position) as? MediaWrapper)?.run {
             artworkURL = media.artworkURL
@@ -78,11 +83,28 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
         get() = currentList?.snapshot() ?: emptyList()
 
     override fun getItemViewType(position: Int): Int {
-        return if (isListMode) 0 else 1
+        return if (position == selectedPosition) {
+            VIEW_TYPE_SELECTED
+        } else {
+            if (isListMode) VIEW_TYPE_LIST else VIEW_TYPE_GRID
+        }
+    }
+
+    companion object {
+        private const val VIEW_TYPE_LIST = 0
+        private const val VIEW_TYPE_GRID = 1
+        private const val VIEW_TYPE_SELECTED = 2 // new layout when item is clicked
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, if (viewType == 0) R.layout.video_list_card else R.layout.video_grid_card, parent, false)
+        val layoutRes = when (viewType) {
+            VIEW_TYPE_LIST -> R.layout.video_list_card
+            VIEW_TYPE_GRID -> R.layout.video_grid_card
+            VIEW_TYPE_SELECTED -> R.layout.video_list_card_main// ➕ custom layout for selected
+            else -> R.layout.video_list_card
+        }
+        val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, layoutRes, parent, false)
+        //val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, if (viewType == 0) R.layout.video_list_card else R.layout.video_grid_card, parent, false)
         if (BuildConfig.DEBUG) Log.d(this::class.java.simpleName, "Creating View Holder with list: $isListMode")
         return ViewHolder(binding)
     }
@@ -128,7 +150,8 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
     private fun fillView(holder: ViewHolder, item: MediaLibraryItem) {
         when (item) {
             is Folder -> {
-                holder.title.text = item.title
+                holder.title.text = item.title?.capitalizeWords() ?: ""
+               // holder.title.typeface = getCustomTypeface(holder.itemView, "Mulish-Bold.ttf")
                 if (!isListMode) holder.binding.setVariable(BR.resolution, null)
                 holder.binding.setVariable(BR.seen, 0L)
                 holder.binding.setVariable(BR.max, 0)
@@ -144,7 +167,8 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
             is VideoGroup -> holder.itemView.scope.launch {
                 val count = item.mediaCount()
                 holder.binding.setVariable(BR.time, if (count < 2) null else if (item.presentCount == item.mediaCount()) holder.itemView.context.resources.getQuantityString(R.plurals.videos_quantity, count, count) else if(item.presentCount == 0) holder.itemView.context.resources.getString(R.string.no_video) else item.getPresenceDescription())
-                holder.title.text = item.title
+                holder.title.text = item.title?.capitalizeWords() ?: ""
+                holder.title.typeface = getCustomTypeface(holder.itemView, "Mulish-Regular.ttf")
                 if (!isListMode) holder.binding.setVariable(BR.resolution, null)
                 val seen = if (item.presentSeen == item.presentCount && item.presentCount != 0) 1L else 0L
                 holder.binding.setVariable(BR.seen, seen)
@@ -154,7 +178,10 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
                 holder.binding.setVariable(BR.media, item)
             }
             is MediaWrapper -> {
-                holder.title.text = if (showFilename.get()) item.fileName else item.title
+                val rawTitle = if (showFilename.get()) item.fileName else item.title
+                holder.title.text = rawTitle?.capitalizeWords() ?: ""
+                holder.title.typeface = getCustomTypeface(holder.itemView, "Mulish-Regular.ttf")
+              //  holder.title.text = if (showFilename.get()) item.fileName else item.title
                 val text: String?
                 val resolution = generateResolutionClass(item.width, item.height)
                 var max = 0
@@ -189,6 +216,19 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
         holder.binding.setVariable(BR.inSelection, multiSelectHelper.inActionMode)
     }
 
+    fun String.capitalizeWords(): String =
+        trim()
+            .split("\\s+".toRegex())
+            .joinToString(" ") { word ->
+                word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+            }
+
+
+
+
+    fun getCustomTypeface(view: View, fontFileName: String): Typeface {
+        return Typeface.createFromAsset(view.context.assets, "fonts/$fontFileName")
+    }
 
     override fun getItemId(position: Int) = 0L
 
@@ -214,9 +254,16 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
         }
 
         fun onClick(@Suppress("UNUSED_PARAMETER") v: View) {
-            val position = layoutPosition
+         /*   val position = layoutPosition
             if (isPositionValid(position)) getItem(position)?.let { eventsChannel.trySend(VideoClick(layoutPosition, it)) }
-        }
+   */
+            val oldPosition = selectedPosition
+            selectedPosition = layoutPosition
+            notifyItemChanged(oldPosition)
+            notifyItemChanged(selectedPosition)
+            getItem(selectedPosition)?.let {
+                eventsChannel.trySend(VideoClick(layoutPosition, it))
+            }}
 
         fun onMoreClick(@Suppress("UNUSED_PARAMETER") v: View) {
             val position = layoutPosition

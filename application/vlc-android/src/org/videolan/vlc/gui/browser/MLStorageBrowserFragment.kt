@@ -33,6 +33,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -156,6 +157,8 @@ class MLStorageBrowserFragment : BaseFragment(), IStorageFragmentDelegate by Sto
 
         localEntry.displayInCards = false
         networkEntry.displayInCards = false
+        localEntry.list.layoutManager = LinearLayoutManager(requireContext())
+        networkEntry.list.layoutManager = LinearLayoutManager(requireContext())
         withAdapters(arrayOf(storageBrowserAdapter, networkAdapter))
     }
 

@@ -195,7 +195,7 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
             else arguments?.parcelable(KEY_FOLDER)
             val parentGroup = if (savedInstanceState != null) savedInstanceState.parcelable<VideoGroup>(KEY_GROUP)
                     else arguments?.parcelable(KEY_GROUP)
-            val grouping = if (parentGroup != null || folder != null) VideoGroupingType.NONE else when (Settings.getInstance(requireContext()).getString(KEY_GROUP_VIDEOS, null) ?: GROUP_VIDEOS_NAME) {
+            val grouping = if (parentGroup != null || folder != null) VideoGroupingType.NONE else when (Settings.getInstance(requireContext()).getString(KEY_GROUP_VIDEOS, null) ?: GROUP_VIDEOS_FOLDER) {
                 GROUP_VIDEOS_NONE -> VideoGroupingType.NONE
                 GROUP_VIDEOS_FOLDER -> VideoGroupingType.FOLDER
                 else -> VideoGroupingType.NAME
@@ -424,7 +424,7 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
         }
         val res = resources
         if (gridItemDecoration == null) gridItemDecoration = ItemOffsetDecoration(resources, R.dimen.left_right_1610_margin, R.dimen.top_bottom_1610_margin)
-        val listMode = !settings.getBoolean(KEY_VIDEOS_CARDS, true)
+        val listMode = !settings.getBoolean(KEY_VIDEOS_CARDS, false)
 
         // Select between grid or list
         binding.videoGrid.removeItemDecoration(gridItemDecoration!!)

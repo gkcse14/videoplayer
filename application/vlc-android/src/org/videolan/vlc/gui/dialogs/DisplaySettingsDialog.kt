@@ -124,7 +124,12 @@ class DisplaySettingsDialog : VLCBottomSheetDialogFragment() {
         currentSortDesc = arguments?.getBoolean(CURRENT_SORT_DESC)
                 ?: throw IllegalStateException("Current sort desc should be provided")
         showAllArtists = if (arguments?.containsKey(SHOW_ALL_ARTISTS) == true) arguments?.getBoolean(SHOW_ALL_ARTISTS) else null
-        showOnlyMultimediaFiles = if (arguments?.containsKey(SHOW_ONLY_MULTIMEDIA_FILES) == true) arguments?.getBoolean(SHOW_ONLY_MULTIMEDIA_FILES) else null
+       // showOnlyMultimediaFiles = if (arguments?.containsKey(SHOW_ONLY_MULTIMEDIA_FILES) == true) arguments?.getBoolean(SHOW_ONLY_MULTIMEDIA_FILES) else null
+        showOnlyMultimediaFiles = if (arguments?.containsKey(SHOW_ONLY_MULTIMEDIA_FILES) == true) {
+            arguments?.getBoolean(SHOW_ONLY_MULTIMEDIA_FILES)
+        } else {
+            org.videolan.tools.Settings.getInstance(requireContext()).getBoolean(org.videolan.tools.BROWSER_SHOW_ONLY_MULTIMEDIA, true)
+        }
         showHiddenFiles = if (arguments?.containsKey(SHOW_HIDDEN_FILES) == true) arguments?.getBoolean(SHOW_HIDDEN_FILES) else null
         showVideoGroups = arguments?.getString(VIDEO_GROUPING, null)
     }

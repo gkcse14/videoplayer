@@ -201,8 +201,9 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        displayInList = Settings.getInstance(requireActivity()).getBoolean(displayInListKey, false)
+       // displayInList = Settings.getInstance(requireActivity()).getBoolean(displayInListKey, false)
 
+        displayInList = Settings.getInstance(requireActivity()).getBoolean(displayInListKey, true)
         //local
         localEntry = view.findViewById(R.id.local_browser_entry)
         val storageBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = true, inCards = !displayInList)

@@ -419,11 +419,11 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
         lastNotificationTime = currentTime
         val parsing = (done.toFloat() / scheduled.toFloat() * 100F)
         val discovery = withContext(Dispatchers.Default) {
-            val progressText = when {
+            val progressText = "Scanning Files" /*when {
                 inDiscovery -> getString(R.string.ml_discovering) + " " + Uri.decode(currentDiscovery?.removeFileScheme())
                 parsing > 0 -> TextUtils.separatedString(getString(R.string.ml_parse_media) + " " + String.format("%.02f",parsing) + "%", "$done/$scheduled")
                 else -> getString(R.string.ml_parse_media)
-            }
+            }*/
             if (!isActive) return@withContext ""
             if (lastNotificationTime != -1L) {
                 try {

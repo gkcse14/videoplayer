@@ -96,7 +96,7 @@ abstract class BrowserProvider(val context: Context, val dataset: LiveDataset<Me
     private var discoveryJob : Job? = null
 
     private val foldersContentMap = SimpleArrayMap<MediaLibraryItem, MutableList<MediaLibraryItem>>()
-    private var showOnlyMultimedia = Settings.getInstance(context).getBoolean(BROWSER_SHOW_ONLY_MULTIMEDIA, false)
+    private var showOnlyMultimedia = Settings.getInstance(context).getBoolean(BROWSER_SHOW_ONLY_MULTIMEDIA, true)
 
     val descriptionUpdate = MutableLiveData<Pair<Int, String>>()
     internal val medialibrary = Medialibrary.getInstance()
