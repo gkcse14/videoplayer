@@ -115,6 +115,7 @@ class StartActivity : FragmentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyTheme()
         super.onCreate(savedInstanceState)
 
         try {
@@ -129,6 +130,15 @@ class StartActivity : FragmentActivity() {
         resume()
     }
 
+    private fun applyTheme() {
+        val pref = Settings.getInstance(this)
+        val isBlack = pref.getBoolean("enable_black_theme", false)
+        if (isBlack) {
+            setTheme(R.style.Theme_VLC_Black)
+        } else {
+            setTheme(R.style.Theme_VLC)
+        }
+    }
     private fun resume() {
         // if browse screen is unstable, revert back to the video screen
 

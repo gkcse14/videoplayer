@@ -9,23 +9,23 @@
     Material color swatches
     The main color is always xxx500
 -->
-    <color name="orange50">#FF0000</color>
-    <color name="orange100">#FF0000</color>
-    <color name="orange200">#FF0000</color>
-    <color name="orange300">#FF0000</color>
-    <color name="orange400">#FF0000</color>
-    <color name="orange500">#FF0000</color>
-    <color name="orange600">#FF0000</color>
-    <color name="orange700">#FF0000</color>
-    <color name="orange800">#FF0000</color>
-    <color name="orange900">#FF0000</color>
+    <color name="orange50">#fb2576</color>
+    <color name="orange100">#765ACC</color>
+    <color name="orange200">#765ACC</color>
+    <color name="orange300">#6C4AB6</color>
+    <color name="orange400">#6C4AB6</color>
+    <color name="orange500">#6C4AB6</color>
+    <color name="orange600">#6C4AB6</color>
+    <color name="orange700">#6C4AB6</color>
+    <color name="orange800">#6C4AB6</color>
+    <color name="orange900">#6C4AB6</color>
 
     <color name="red500transparent25">#40ff0000</color>
     <color name="red500transparent">#b4ff0000</color>
-    <color name="red200">#EF9A9A</color>
-    <color name="orange500transparent">#b4ff8800</color>
-    <color name="orange500focus">#86ff8800</color>
-    <color name="orange200transparent">#64ffca7d</color>
+    <color name="red200">#765ACC</color>
+    <color name="orange500transparent">#b4765ACC</color>
+    <color name="orange500focus">#86765ACC</color>
+    <color name="orange200transparent">#64765ACC</color>
 
     <color name="green50">#bdeadd</color>
     <color name="green100">#a7e3d1</color>

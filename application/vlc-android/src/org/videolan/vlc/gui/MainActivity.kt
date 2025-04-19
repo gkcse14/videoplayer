@@ -23,7 +23,9 @@ package org.videolan.vlc.gui
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.AlertDialog
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -33,6 +35,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.ActionMode
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -41,6 +45,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import org.videolan.libvlc.util.AndroidUtil
 import org.videolan.medialibrary.interfaces.Medialibrary
+import org.videolan.resources.ACTION_MANUAL_RELOAD
 import org.videolan.resources.ACTIVITY_RESULT_OPEN
 import org.videolan.resources.ACTIVITY_RESULT_PREFERENCES
 import org.videolan.resources.ACTIVITY_RESULT_SECONDARY
@@ -60,6 +65,7 @@ import org.videolan.tools.RESULT_UPDATE_SEEN_MEDIA
 import org.videolan.tools.Settings
 import org.videolan.tools.putSingle
 import org.videolan.vlc.BuildConfig
+import org.videolan.vlc.MediaParsingService
 import org.videolan.vlc.R
 import org.videolan.vlc.StartActivity
 import org.videolan.vlc.gui.audio.AudioBrowserFragment
@@ -73,6 +79,7 @@ import org.videolan.vlc.gui.helpers.INavigator
 import org.videolan.vlc.gui.helpers.Navigator
 import org.videolan.vlc.gui.helpers.UiTools
 import org.videolan.vlc.gui.helpers.UiTools.isTablet
+import org.videolan.vlc.gui.helpers.applyTheme
 import org.videolan.vlc.gui.video.VideoGridFragment
 import org.videolan.vlc.interfaces.Filterable
 import org.videolan.vlc.interfaces.IRefreshable
@@ -126,7 +133,7 @@ class MainActivity : ContentActivity(),
         }
 
         lifecycleScope.launch {
-            if (!BuildConfig.DEBUG) return@launch
+          /*  if (!BuildConfig.DEBUG) return@launch
             AutoUpdate.clean(this@MainActivity.application)
             if (!settings.getBoolean(KEY_SHOW_UPDATE, true)) return@launch
             if (!settings.contains(KEY_SHOW_UPDATE)) {
@@ -147,7 +154,7 @@ class MainActivity : ContentActivity(),
                     arguments = bundleOf(UPDATE_URL to url, UPDATE_DATE to date.time)
                 }
                 updateDialog.show(supportFragmentManager, "fragment_update")
-            }
+            }*/
         }
         if (settings.getBoolean(KEY_LAST_SESSION_CRASHED, false)) {
             settings.putSingle(KEY_LAST_SESSION_CRASHED, false)
@@ -173,6 +180,7 @@ class MainActivity : ContentActivity(),
         }
 
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -200,8 +208,35 @@ class MainActivity : ContentActivity(),
         }
     }
 
+    private fun toggleTheme() {
+        val settings = Settings.getInstance(this)
+        val current = settings.getString("app_theme", "-1")?.toIntOrNull() ?: -1
+
+        val newTheme = if (current == AppCompatDelegate.MODE_NIGHT_YES) {
+            AppCompatDelegate.MODE_NIGHT_NO
+        } else {
+            AppCompatDelegate.MODE_NIGHT_YES
+        }
+
+        settings.edit().putString("app_theme", newTheme.toString()).apply()
+        AppCompatDelegate.setDefaultNightMode(newTheme)
+
+        // Optional: add fade effect
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        recreate()
+    }
+
+
+
+    private fun fullAppRestart() {
+    }
+
+
 
     private fun prepareActionBar() {
+        findViewById<TextView>(R.id.toolbar_vlc_title)?.setOnClickListener {
+            toggleTheme()
+        }
         toolbarIcon = findViewById(R.id.toolbar_icon)
         updateIncognitoModeIcon()
         supportActionBar?.run {
@@ -215,7 +250,10 @@ class MainActivity : ContentActivity(),
         super.onStart()
         if (mediaLibrary.isInitiated) {
             /* Load media items from database and storage */
-            if (scanNeeded && Permissions.canReadStorage(this) && !mediaLibrary.isWorking) this.reloadLibrary()
+            if (scanNeeded && Permissions.canReadStorage(this) && !mediaLibrary.isWorking)
+            {
+                this.reloadLibrary(manual = false)
+            }
         }
     }
 
@@ -311,7 +349,12 @@ class MainActivity : ContentActivity(),
     }
 
     fun forceRefresh() {
-        forceRefresh(currentFragment)
+        // ✅ set the flag before reload
+        val intent = Intent(this, MediaParsingService::class.java).apply {
+            action = ACTION_MANUAL_RELOAD
+        }
+        startService(intent)
+       // forceRefresh(currentFragment)
     }
 
     private fun forceRefresh(current: Fragment?) {
@@ -319,7 +362,7 @@ class MainActivity : ContentActivity(),
             if (current != null && current is IRefreshable)
                 (current as IRefreshable).refresh()
             else
-                reloadLibrary()
+                this.reloadLibrary(manual = true)
         }
     }
 
@@ -328,7 +371,7 @@ class MainActivity : ContentActivity(),
 //        if (VLCBilling.getInstance(this.application).iabHelper.handleActivityResult(requestCode, resultCode, data)) return
         if (requestCode == ACTIVITY_RESULT_PREFERENCES) {
             when (resultCode) {
-                RESULT_RESCAN -> this.reloadLibrary()
+                RESULT_RESCAN -> this.reloadLibrary(manual = false)
                 RESULT_RESTART, RESULT_RESTART_APP -> {
                     val intent = Intent(this@MainActivity, if (resultCode == RESULT_RESTART_APP) StartActivity::class.java else MainActivity::class.java)
                     finish()

@@ -39,6 +39,7 @@ import org.videolan.tools.isStarted
 import org.videolan.vlc.R
 import org.videolan.vlc.gui.BaseFragment
 import org.videolan.vlc.gui.ContentActivity
+import org.videolan.vlc.gui.HistoryFragment
 import org.videolan.vlc.gui.PlaylistFragment
 import org.videolan.vlc.gui.helpers.UiTools.addFavoritesIcon
 import org.videolan.vlc.gui.helpers.UiTools.removeDrawables
@@ -148,7 +149,9 @@ class VideoBrowserFragment : BaseFragment(), TabLayout.OnTabSelectedListener, Fi
 
     private fun getPageTitle(position: Int) = when (position) {
         0 -> getString(R.string.videos)
-        else -> getString(R.string.playlists)
+        1 -> getString(R.string.history)
+        2 -> getString(R.string.playlists)
+        else -> ""
     }
 
     override fun hasFAB(): Boolean {
@@ -168,13 +171,14 @@ class VideoBrowserFragment : BaseFragment(), TabLayout.OnTabSelectedListener, Fi
      */
     inner class VideoPagerAdapter(fa: VideoBrowserFragment) : FragmentStateAdapter(fa) {
 
-        override fun getItemCount() = 2
+        override fun getItemCount() = 3
 
         // Returns the fragment to display for that page
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> VideoGridFragment.newInstance()
-                1 -> PlaylistFragment.newInstance(Playlist.Type.Video)
+                1 -> HistoryFragment()
+                2 -> PlaylistFragment.newInstance(Playlist.Type.Video)
                 else -> throw IllegalStateException("Invalid fragment index")
             }
         }

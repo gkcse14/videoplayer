@@ -68,6 +68,7 @@ import org.videolan.resources.ACTION_DISCOVER
 import org.videolan.resources.ACTION_DISCOVER_DEVICE
 import org.videolan.resources.ACTION_FORCE_RELOAD
 import org.videolan.resources.ACTION_INIT
+import org.videolan.resources.ACTION_MANUAL_RELOAD
 import org.videolan.resources.ACTION_PAUSE_SCAN
 import org.videolan.resources.ACTION_RELOAD
 import org.videolan.resources.ACTION_RESUME_SCAN
@@ -228,6 +229,10 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
                 val parse = intent.getBooleanExtra(EXTRA_PARSE, true)
                 val removeDevices = intent.getBooleanExtra(EXTRA_REMOVE_DEVICE, false)
                 setupMedialibrary(upgrade, parse, removeDevices)
+            }
+            ACTION_MANUAL_RELOAD -> {
+                manualRefreshTriggered = true
+                actions.trySend(Reload(null))
             }
             ACTION_RELOAD -> actions.trySend(Reload(intent.getStringExtra(EXTRA_PATH)))
             ACTION_FORCE_RELOAD -> actions.trySend(ForceReload)
@@ -454,9 +459,10 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
     }
 
     override fun onDiscoveryProgress(entryPoint: String) {
-        if (BuildConfig.DEBUG) Log.v(TAG, "onDiscoveryProgress: $entryPoint")
         currentDiscovery = entryPoint
-        if (::notificationActor.isInitialized) notificationActor.trySend(Show(-1, -1))
+        if (manualRefreshTriggered && ::notificationActor.isInitialized) {
+            notificationActor.trySend(Show(-1, -1))
+        }
     }
 
     override fun onDiscoveryCompleted() {
@@ -472,8 +478,14 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
         lastDone = done
         lastScheduled = scheduled
         val doneParsing = (done == scheduled)
-        if (!doneParsing && ::notificationActor.isInitialized) notificationActor.trySend(Show(done, scheduled))
-        else if (doneParsing && ::notificationActor.isInitialized) notificationActor.trySend(Hide)
+        if (manualRefreshTriggered && ::notificationActor.isInitialized) {
+            if (!doneParsing) notificationActor.trySend(Show(done, scheduled))
+            else notificationActor.trySend(Hide)
+        }
+
+        if (doneParsing) {
+            manualRefreshTriggered = false // reset
+        }
     }
 
     override fun onReloadStarted(entryPoint: String) {
@@ -485,6 +497,7 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
         if (BuildConfig.DEBUG) Log.v(TAG, "onReloadCompleted $entryPoint")
         if (entryPoint.isEmpty()) --reload
         if (reload <= 0) exitCommand()
+
     }
 
     private fun exitCommand() {
@@ -599,6 +612,9 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
         val discoveryError = MutableLiveData<DiscoveryError>()
         val newStorages = MutableLiveData<MutableList<String>>()
         val preselectedStorages = mutableListOf<String>()
+
+        // 👉 Add this flag
+        @Volatile var manualRefreshTriggered = false
     }
 }
 
@@ -606,7 +622,12 @@ data class ScanProgress(val parsing: Float, val progressText: String, val inDisc
 data class DiscoveryError(val entryPoint: String)
 
 fun Context.reloadLibrary() {
-    launchForeground(Intent(ACTION_RELOAD, null, this, MediaParsingService::class.java))
+   launchForeground(Intent(ACTION_RELOAD, null, this, MediaParsingService::class.java))
+}
+fun Context.reloadLibrary(manual: Boolean = false) {
+    val intent = Intent(this, MediaParsingService::class.java)
+    intent.action = if (manual) ACTION_MANUAL_RELOAD else ACTION_RELOAD
+    launchForeground(intent)
 }
 
 fun Context.rescan() {

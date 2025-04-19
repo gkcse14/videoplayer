@@ -91,14 +91,13 @@
         android:onClick="@{holder::onClick}"
         android:onLongClick="@{holder::onLongClick}"
         android:orientation="horizontal"
-        android:paddingStart="8dp"
+
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         vlc:mediaContentDescription="@{media}">
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container"
-            style="@style/VLCCardView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -112,9 +111,7 @@
             vlc:layout_constraintStart_toStartOf="parent"
             vlc:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="67dp">
+
 
                 <!-- Image loading is handled by org.videolan.vlc.gui.helpers.ImageLoader.loadImage() -->
                 <ImageView
@@ -122,13 +119,13 @@
                     android:layout_width="120dp"
                     android:layout_height="67dp"
 
-                    android:scaleType="centerCrop"
-                    android:src="@{cover}"
-                    tools:src="@tools:sample/backgrounds/scenic"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/mxskin__ic_default_folder__light"
+
                     vlc:layout_constraintBottom_toBottomOf="parent"
                     vlc:layout_constraintStart_toStartOf="parent"
                     vlc:layout_constraintTop_toTopOf="parent"
-                    vlc:media="@{media}" />
+                   />
 
                 <View
                     android:id="@+id/black_overlay"
@@ -226,20 +223,29 @@
                     vlc:tint="@color/white" />
 
                 <TextView
-                    android:id="@+id/ml_item_time"
-                    style="@style/VLC.TextViewDescription"
+                    android:id="@+id/ml_item_time_main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_black_background"
-                    android:enabled="@{!isNetwork || isPresent}"
-                    android:padding="4dp"
+                    android:minWidth="32dp"
+                    android:minHeight="32dp"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/bg_red_circle"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:textColor="@android:color/white"
-                    android:textSize="10sp"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:elevation="3dp"
+                    android:fontFamily="sans-serif-medium"
                     android:visibility="@{TextUtils.isEmpty(time) ? View.GONE : View.VISIBLE}"
-                    tools:text="32:55"
-                    vlc:layout_constraintBottom_toBottomOf="parent"
-                    vlc:layout_constraintEnd_toEndOf="parent"
+                    tools:text="999"
+                    vlc:layout_constraintTop_toTopOf="@id/ml_item_thumbnail"
+                    vlc:layout_constraintEnd_toEndOf="@id/ml_item_thumbnail"
                     vlc:presenceDescription="@{time}" />
+
 
                 <ImageView
                     android:id="@+id/ml_item_overlay"
@@ -281,25 +287,25 @@
                     vlc:layout_constraintStart_toStartOf="parent"
                     vlc:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
+
 
         <TextView
             android:id="@+id/ml_item_title"
             style="@style/VLC.TextViewTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="4dp"
             android:ellipsize="end"
             android:enabled="@{isPresent}"
             android:gravity="center_vertical"
             android:lineSpacingMultiplier="1"
-            android:textColor="@color/orange50"
-            android:textSize="16sp"
+            android:textSize="16dp"
             tools:text="Star wars Episode 1"
             vlc:layout_constraintEnd_toStartOf="@+id/media_favorite"
             vlc:layout_constraintStart_toEndOf="@+id/container"
             vlc:layout_constraintTop_toTopOf="parent"
+            vlc:layout_constraintBottom_toBottomOf="parent"
             vlc:layout_constraintVertical_chainStyle="packed" />
 
         <ImageView
@@ -324,13 +330,14 @@
             android:onClick="@{holder::onMoreClick}"
             android:padding="8dp"
             android:scaleType="center"
-            android:visibility="@{isPresent &amp;&amp; !inSelection ? View.VISIBLE : View.INVISIBLE}"
+           android:visibility="gone"
             vlc:layout_constraintBottom_toBottomOf="parent"
             vlc:layout_constraintEnd_toEndOf="parent"
             vlc:layout_constraintTop_toTopOf="parent"
             vlc:srcCompat="@drawable/ic_more" />
+      <!--  android:visibility="@{isPresent &amp;&amp; !inSelection ? View.VISIBLE : View.INVISIBLE}"
 
-
+-->
         <ImageView
             android:id="@+id/selected_check"
             android:layout_width="wrap_content"

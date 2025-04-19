@@ -107,6 +107,7 @@ const val ACTION_START_SERVER = "action_start_server"
 const val ACTION_DISABLE_SERVER = "action_disable_server"
 const val ACTION_RESTART_SERVER = "action_restart_server"
 const val ACTION_CONTENT_INDEXING = "action_content_indexing"
+const val ACTION_MANUAL_RELOAD = "org.videolan.resources.actions.manual_reload"
 
 // VideoPlayerActivity
 @JvmField val PLAY_FROM_VIDEOGRID = "gui.video.PLAY_FROM_VIDEOGRID".buildPkgString()

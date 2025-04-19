@@ -31,6 +31,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.resources.util.parcelable
+import org.videolan.tools.Settings
 import org.videolan.vlc.R
 import org.videolan.vlc.gui.BaseActivity
 import org.videolan.vlc.gui.video.VideoPlayerActivity
@@ -48,6 +49,7 @@ class FilePickerActivity : BaseActivity() {
         else null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
+        applyTheme()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.file_picker_activity)
         val ft = supportFragmentManager.beginTransaction()
@@ -63,6 +65,16 @@ class FilePickerActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    private fun applyTheme() {
+        val pref = Settings.getInstance(this)
+        val isBlack = pref.getBoolean("enable_black_theme", false)
+        if (isBlack) {
+            setTheme(R.style.Theme_VLC_Black)
+        } else {
+            setTheme(R.style.Theme_VLC)
+        }
     }
 
     fun onCloseClick(@Suppress("UNUSED_PARAMETER") v:View) {

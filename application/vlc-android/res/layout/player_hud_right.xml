@@ -110,7 +110,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="22sp"
-                app:drawableStartCompat="@drawable/ic_warning_small"
+                app:drawableStartCompat="@drawable/ic_launcher"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

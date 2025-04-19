@@ -31,10 +31,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.view.ActionMode
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,6 +44,7 @@ import kotlinx.coroutines.withContext
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
 import org.videolan.medialibrary.media.MediaWrapperImpl
+import org.videolan.resources.ACTIVITY_RESULT_PREFERENCES
 import org.videolan.resources.EXTRA_FOR_ESPRESSO
 import org.videolan.resources.util.parcelableList
 import org.videolan.tools.NetworkMonitor
@@ -64,6 +67,11 @@ import org.videolan.vlc.gui.helpers.UiTools.showMediaInfo
 import org.videolan.vlc.gui.helpers.hf.OTG_SCHEME
 import org.videolan.vlc.gui.helpers.hf.OtgAccess
 import org.videolan.vlc.gui.helpers.hf.requestOtgRoot
+import org.videolan.vlc.gui.network.IStreamsFragmentDelegate
+import org.videolan.vlc.gui.network.KeyboardListener
+import org.videolan.vlc.gui.network.MRLAdapter
+import org.videolan.vlc.gui.network.StreamsFragmentDelegate
+import org.videolan.vlc.gui.preferences.PreferencesActivity
 import org.videolan.vlc.gui.view.EmptyLoadingState
 import org.videolan.vlc.gui.view.EmptyLoadingStateView
 import org.videolan.vlc.gui.view.TitleListView
@@ -79,13 +87,14 @@ import org.videolan.vlc.util.ContextOption.CTX_PLAY
 import org.videolan.vlc.util.FlagSet
 import org.videolan.vlc.util.Permissions
 import org.videolan.vlc.util.isSchemeFavoriteEditable
+import org.videolan.vlc.viewmodels.StreamsModel
 import org.videolan.vlc.viewmodels.browser.BrowserFavoritesModel
 import org.videolan.vlc.viewmodels.browser.BrowserModel
 import org.videolan.vlc.viewmodels.browser.TYPE_FILE
 import org.videolan.vlc.viewmodels.browser.TYPE_NETWORK
 import org.videolan.vlc.viewmodels.browser.getBrowserModel
 
-class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionReceiver {
+class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionReceiver , IStreamsFragmentDelegate by StreamsFragmentDelegate() {
 
     private lateinit var networkMonitor: NetworkMonitor
     private var currentCtx: MainBrowserContainer? = null
@@ -95,6 +104,11 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
 
     private lateinit var favoritesEntry: TitleListView
     private lateinit var favoritesViewModel: BrowserFavoritesModel
+
+    private lateinit var streamsAdapter: MRLAdapter
+    private lateinit var streamsEntry: TitleListView
+    private lateinit var streamsViewModel: StreamsModel
+
 
     private lateinit var networkEntry: TitleListView
     private lateinit var networkViewModel: BrowserModel
@@ -189,6 +203,8 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
         localViewModel = getBrowserModel(category = TYPE_FILE, url = null)
         favoritesViewModel = BrowserFavoritesModel(requireContext())
         networkViewModel = getBrowserModel(category = TYPE_NETWORK, url = null, mocked = arguments?.parcelableList(EXTRA_FOR_ESPRESSO))
+        streamsViewModel = ViewModelProvider(requireActivity(), StreamsModel.Factory(requireContext(), showDummy = true))[StreamsModel::class.java]
+
     }
 
     override fun onPause() {
@@ -201,9 +217,9 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       // displayInList = Settings.getInstance(requireActivity()).getBoolean(displayInListKey, false)
+        displayInList = Settings.getInstance(requireActivity()).getBoolean(displayInListKey, false)
 
-        displayInList = Settings.getInstance(requireActivity()).getBoolean(displayInListKey, true)
+       // displayInList = Settings.getInstance(requireActivity()).getBoolean(displayInListKey, true)
         //local
         localEntry = view.findViewById(R.id.local_browser_entry)
         val storageBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = true, inCards = !displayInList)
@@ -284,6 +300,51 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
                 localViewModel.provider.refresh()
                 favoritesViewModel.provider.refresh()
             }
+        }
+
+        ///////////
+        streamsEntry = view.findViewById(R.id.streams_entry)
+        setup(this, streamsViewModel, object : KeyboardListener {
+            override fun hideKeyboard() {}
+        })
+
+        streamsAdapter = MRLAdapter(getlistEventActor(), inCards = true)
+        streamsAdapter.setOnDummyClickListener {
+            val i = Intent(activity, SecondaryActivity::class.java)
+            i.putExtra("fragment", SecondaryActivity.STREAMS)
+            requireActivity().startActivityForResult(i, SecondaryActivity.ACTIVITY_RESULT_SECONDARY)
+        }
+        streamsEntry.list.adapter = streamsAdapter
+
+        streamsViewModel.dataset.observe(viewLifecycleOwner) {
+            streamsAdapter.update(it)
+            streamsEntry.loading.state = EmptyLoadingState.NONE
+        }
+        streamsViewModel.loading.observe(viewLifecycleOwner) {
+            if (it) streamsEntry.loading.state = EmptyLoadingState.LOADING
+        }
+
+        streamsEntry.actionButton.setVisible()
+        streamsEntry.setOnActionClickListener {
+            val i = Intent(requireActivity(), SecondaryActivity::class.java)
+            i.putExtra("fragment", SecondaryActivity.STREAMS)
+            requireActivity().startActivityForResult(i, SecondaryActivity.ACTIVITY_RESULT_SECONDARY)
+        }
+
+        val settingsButton: Button = view.findViewById(R.id.settingsButton)
+        val aboutButton: Button = view.findViewById(R.id.aboutButton)
+
+        settingsButton.setOnClickListener {
+            requireActivity().startActivityForResult(
+                Intent(requireActivity(), PreferencesActivity::class.java),
+                ACTIVITY_RESULT_PREFERENCES
+            )
+        }
+
+        aboutButton.setOnClickListener {
+            val i = Intent(requireActivity(), SecondaryActivity::class.java)
+            i.putExtra("fragment", SecondaryActivity.ABOUT)
+            requireActivity().startActivityForResult(i, SecondaryActivity.ACTIVITY_RESULT_SECONDARY)
         }
     }
 

@@ -83,24 +83,25 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
         get() = currentList?.snapshot() ?: emptyList()
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == selectedPosition) {
-            VIEW_TYPE_SELECTED
-        } else {
-            if (isListMode) VIEW_TYPE_LIST else VIEW_TYPE_GRID
+        return when (val item = getItem(position)) {
+            is Folder -> VIEW_TYPE_FOLDER
+            else -> VIEW_TYPE_VIDEO
         }
     }
 
+
     companion object {
-        private const val VIEW_TYPE_LIST = 0
-        private const val VIEW_TYPE_GRID = 1
-        private const val VIEW_TYPE_SELECTED = 2 // new layout when item is clicked
+        private const val VIEW_TYPE_VIDEO = 0
+        private const val VIEW_TYPE_FOLDER = 1
+       // private const val VIEW_TYPE_SELECTED = 2
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val layoutRes = when (viewType) {
-            VIEW_TYPE_LIST -> R.layout.video_list_card
-            VIEW_TYPE_GRID -> R.layout.video_grid_card
-            VIEW_TYPE_SELECTED -> R.layout.video_list_card_main// ➕ custom layout for selected
+            VIEW_TYPE_FOLDER -> R.layout.video_list_card_main  // for folders
+            VIEW_TYPE_VIDEO -> R.layout.video_list_card        // for videos
+           // VIEW_TYPE_SELECTED -> R.layout.video_list_card_main // or custom selected layout if needed
             else -> R.layout.video_list_card
         }
         val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, layoutRes, parent, false)
@@ -151,12 +152,21 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
         when (item) {
             is Folder -> {
                 holder.title.text = item.title?.capitalizeWords() ?: ""
-               // holder.title.typeface = getCustomTypeface(holder.itemView, "Mulish-Bold.ttf")
+
+                val folderName = item.title?.lowercase()
+                val folderThumbnail = when {
+                    folderName?.contains("download") == true -> R.drawable.folder_download
+                    folderName?.contains("camera") == true -> R.drawable.folder_camera
+                    else -> R.drawable.folder_purple // fallback or generic folder icon
+                }
+                holder.itemView.findViewById<ImageView>(R.id.ml_item_thumbnail).setImageResource(folderThumbnail)
+
+                  holder.title.typeface = getCustomTypeface(holder.itemView, "Mulish-Regular.ttf")
                 if (!isListMode) holder.binding.setVariable(BR.resolution, null)
                 holder.binding.setVariable(BR.seen, 0L)
                 holder.binding.setVariable(BR.max, 0)
                 val count = item.mediaCount(Folder.TYPE_FOLDER_VIDEO)
-                holder.binding.setVariable(BR.time, holder.itemView.context.resources.getQuantityString(R.plurals.videos_quantity, count, count))
+                holder.binding.setVariable(BR.time,  count.toString())
                 holder.binding.setVariable(BR.isNetwork, false)
                 holder.binding.setVariable(BR.isPresent, true)
                 holder.binding.setVariable(BR.isFavorite, item.isFavorite)
@@ -168,7 +178,7 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
                 val count = item.mediaCount()
                 holder.binding.setVariable(BR.time, if (count < 2) null else if (item.presentCount == item.mediaCount()) holder.itemView.context.resources.getQuantityString(R.plurals.videos_quantity, count, count) else if(item.presentCount == 0) holder.itemView.context.resources.getString(R.string.no_video) else item.getPresenceDescription())
                 holder.title.text = item.title?.capitalizeWords() ?: ""
-                holder.title.typeface = getCustomTypeface(holder.itemView, "Mulish-Regular.ttf")
+                holder.title.typeface = getCustomTypeface(holder.itemView, "comfortaalight.ttf")
                 if (!isListMode) holder.binding.setVariable(BR.resolution, null)
                 val seen = if (item.presentSeen == item.presentCount && item.presentCount != 0) 1L else 0L
                 holder.binding.setVariable(BR.seen, seen)
@@ -272,14 +282,21 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
 
         fun onLongClick(@Suppress("UNUSED_PARAMETER") v: View): Boolean {
             val position = layoutPosition
-            return isPositionValid(position) && getItem(position)?.let { eventsChannel.trySend(VideoLongClick(layoutPosition, it)).isSuccess } == true
+           // return isPositionValid(position) && getItem(position)?.let { eventsChannel.trySend(VideoLongClick(layoutPosition, it)).isSuccess } == true
+            return if (isPositionValid(position)) {
+                getItem(position)?.let {
+                    onMoreClick(v) // 👈 Trigger the same action as 3-dot click
+                    true
+                } ?: false
+            } else false
         }
+
 
         override fun selectView(selected: Boolean) {
             binding.setVariable(BR.selected, selected)
             overlay.setImageResource(if (selected) R.drawable.video_overlay_selected else if (isListMode) 0 else R.drawable.video_overlay_gradient)
             if (isListMode) overlay.visibility = if (selected) View.VISIBLE else View.GONE
-            more.visibility = if (multiSelectHelper.inActionMode) View.INVISIBLE else View.VISIBLE
+            more.visibility = View.GONE //if (multiSelectHelper.inActionMode) View.INVISIBLE else View.VISIBLE
         }
 
         override fun isSelected() = multiSelectHelper.isSelected(layoutPosition)

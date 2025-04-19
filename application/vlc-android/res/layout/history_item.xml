@@ -41,21 +41,22 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+
             android:background="@{bgColor}"
             android:clickable="true"
             android:focusable="true"
-            android:minHeight="@dimen/audio_browser_item_size"
+android:layout_marginTop="8dp"
             android:onClick="@{holder::onClick}"
             android:onLongClick="@{holder::onLongClick}"
             vlc:mediaContentDescription="@{media}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout4"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/audio_browser_item_size"
-                android:layout_marginStart="16dp"
+                android:layout_width="120dp"
+                android:layout_height="67dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -75,8 +76,8 @@
 
             <ImageView
                     android:id="@+id/icon"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/audio_browser_item_size"
+                android:layout_width="120dp"
+                android:layout_height="67dp"
                     android:layout_gravity="center"
                     android:importantForAccessibility="no"
                     android:onClick="@{holder::onImageClick}"
@@ -130,6 +131,7 @@
                 app:ellipsizeMode="@{true}"
                 android:maxLines="1"
                 android:text="@{media.title}"
+            android:fontFamily="@font/mulreg"
                 app:layout_constraintBottom_toTopOf="@+id/subtitle"
                 app:layout_constraintEnd_toStartOf="@+id/mediaTypeBarrier"
                 app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
@@ -143,6 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="8dp"
+                android:fontFamily="@font/mulreg"
                 android:enabled="@{media.isPresent}"
                 android:text="@{media.description}"
                 android:visibility="@{TextUtils.isEmpty(media.description) ? View.GONE : View.VISIBLE}"

@@ -47,7 +47,7 @@
             android:layout_alignTop="@id/cover_background"
             android:layout_alignLeft="@id/cover_background"
             android:layout_alignRight="@id/cover_background"
-            android:src="@drawable/ic_widget_icon" />
+            android:src="@drawable/ic_launcher" />
 
     <ImageView
             android:id="@+id/cover"
@@ -58,7 +58,7 @@
             android:layout_alignLeft="@id/cover_background"
             android:layout_alignRight="@id/cover_background"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_widget_icon" />
+            android:src="@drawable/ic_launcher" />
 
     <ImageView
             android:id="@+id/player_container_background"

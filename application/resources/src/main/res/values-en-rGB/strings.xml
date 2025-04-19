@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
         tools:ignore="MissingTranslation">
 
-    <!-- Main VLC Interface -->
+    <!-- Main LUMO Interface -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="other">Other</string>
@@ -47,7 +47,7 @@
     <string name="play_as_video">Play as video</string>
     <string name="return_to_video">Long tap the cover to restore the video</string>
     <string name="video_app_switch_title">Background/PiP mode</string>
-    <string name="video_app_switch_summary">Select VLC behaviour when you switch to other application from video playback</string>
+    <string name="video_app_switch_summary">Select LUMO behaviour when you switch to other application from video playback</string>
     <string name="play_pip_title">Play videos in Picture-in-picture mode</string>
     <string name="play_as_audio_background">Play videos in background</string>
     <string name="append">Add to play queue</string>
@@ -296,12 +296,12 @@
     <string name="hold_to_stop">Hold to stop</string>
 
     <!-- About -->
-    <string name="app_name_full">VLC for Android</string>
+    <string name="app_name_full">LUMO Player</string>
     <string name="revision">Revision</string>
     <string name="about">About</string>
-    <string name="about_vlc_text">VLC for Android™ is a port of VLC media player, the popular open source media player. The Android™ version can read all files and network streams.</string>
+    <string name="about_vlc_text">Lumo Player is a powerful and elegant video player for Android™. It supports a wide range of video and audio formats, including network streams, and delivers a smooth, user-friendly experience.</string>
     <string name="authors">Authors</string>
-    <string name="vlc_authors">and VLC Authors.</string>
+    <string name="vlc_authors">and LUMO Authors.</string>
     <string name="is_compiled_by">Compiled by</string>
     <string name="is_signed_by">Signed by</string>
     <string name="sources">Source code</string>
@@ -844,22 +844,22 @@
     <string name="video_remote_enable">Switch to remote control mode</string>
     <string name="video_remote_disable">Duplicate screen</string>
     <string name="removed_from_playlist_anonymous">Item(s) removed from playlist</string>
-    <string name="welcome_title">Welcome to VLC!</string>
-    <string name="welcome_subtitle">The free and open source multimedia player</string>
-    <string name="permission_media">VLC needs your permission to access media on your device</string>
-    <string name="permission_video">VLC needs your permission to access video media on your device</string>
-    <string name="permission_audio">VLC needs your permission to access audio media on your device</string>
-    <string name="medialibrary_scan_explanation">VLC can automatically scan your device to organise your media collection.</string>
-    <string name="player_title_fd_warning">Without the storage permission, VLC cannot retrieve the media title nor save the progress</string>
-    <string name="onboarding_theme_title">Make yourself at home</string>
-    <string name="done">Done</string>
-    <string name="onboarding_scan_title">Auto-discover your media</string>
-    <string name="onboarding_all_set">VLC is all set!</string>
-    <string name="onboarding_permission_given">You can now auto-discover your media, use external subtitles as well as play streams or network media </string>
-    <string name="daynight_system_explanation">VLC will automatically switch to dark mode accordingly with system setting</string>
-    <string name="daynight_legacy_explanation">VLC will automatically switch to night mode at appropriate time</string>
-    <string name="onboarding_scanning_enable">Let VLC scan my device for media content</string>
-    <string name="onboarding_scan_customize">Let me choose which folders VLC will scan</string>
+    <string name="welcome_title">Welcome to Lumo!</string>
+    <string name="welcome_subtitle">Your sleek and smart video player</string>
+    <string name="permission_media">Lumo needs access to your media to create the best viewing experience</string>
+    <string name="permission_video">Lumo needs permission to find and play your video files</string>
+    <string name="permission_audio">Lumo needs permission to access your audio files</string>
+    <string name="medialibrary_scan_explanation">Lumo can auto-scan your device and organize your media for easy access</string>
+    <string name="player_title_fd_warning">Without storage access, Lumo can\'t load video titles or remember playback positions</string>
+    <string name="onboarding_theme_title">Customize your experience</string>
+    <string name="done">Let’s go</string>
+    <string name="onboarding_scan_title">Find your videos effortlessly</string>
+    <string name="onboarding_all_set">You\'re all set with Lumo!</string>
+    <string name="onboarding_permission_given">You can now explore your media library, use subtitles, and stream with ease</string>
+    <string name="daynight_system_explanation">Lumo will follow your system’s dark mode preference automatically</string>
+    <string name="daynight_legacy_explanation">Lumo will switch to night mode automatically at the right time</string>
+    <string name="onboarding_scanning_enable">Let Lumo scan your device for videos and audio</string>
+    <string name="onboarding_scan_customize">Choose which folders Lumo should scan</string>
     <string name="button_medialibrary_preferences">Go to Medialibrary preferences</string>
     <string name="light_theme">Light theme</string>
     <string name="add">Add</string>
@@ -1120,8 +1120,8 @@
     <string name="lock_use_sensor_title">Lock with sensor</string>
     <string name="lock_use_sensor_summary">When the orientation is locked, use the sensor to allow the reverse orientation</string>
     <string name="start">Start</string>
-    <string name="notification_permission">Notification permission</string>
-    <string name="notification_permission_explanation">VLC needs your permission to send notifications.\nThe app will only notify you when scanning your media or using the custom video Picture in Picture.\nRefusing it won\'t prevent VLC to work, however the notifications will be hidden.</string>
+    <string name="notification_permission">Notification Permission</string>
+    <string name="notification_permission_explanation">Lumo needs permission to send you notifications. \nIt will only use them when scanning media or playing videos in Picture-in-Picture mode.\nIf you say no, the app will still work, but you won’t see notifications.</string>
     <string name="permission">Permission</string>
     <string name="permission_no_access">No file access</string>
     <string name="permissions">Permissions</string>

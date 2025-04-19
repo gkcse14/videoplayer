@@ -30,7 +30,7 @@
             android:icon="@drawable/ic_pin_lock"
             android:title="@string/lock_with_pin"
             app:showAsAction="always"
-            android:visible="false"/>
+            android:visible="true"/>
 
     <item
             android:orderInCategory="1"

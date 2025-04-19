@@ -19,7 +19,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icon" />
+                app:srcCompat="@drawable/ic_launcher" />
 
         <TextView
                 android:text="@string/welcome_beta_title"

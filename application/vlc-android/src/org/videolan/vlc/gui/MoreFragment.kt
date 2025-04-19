@@ -109,13 +109,14 @@ class MoreFragment : BaseFragment(), IRefreshable, IHistory, IDialogManager,
         settingsButton = view.findViewById(R.id.settingsButton)
         aboutButton = view.findViewById(R.id.aboutButton)
         donationsButton = view.findViewById(R.id.donationsButton)
-        if (!Settings.getInstance(requireActivity()).getBoolean(PLAYBACK_HISTORY, true)) historyEntry.setGone()
+        //if (!Settings.getInstance(requireActivity()).getBoolean(PLAYBACK_HISTORY, true)) historyEntry.setGone()
+        historyEntry.setGone()
         viewModel.dataset.observe(viewLifecycleOwner) { list ->
             list?.let {
                 historyAdapter.update(it)
                 if (list.isEmpty()) historyEntry.setGone() else {
-                    historyEntry.setVisible()
-                    historyEntry.loading.state = EmptyLoadingState.NONE
+                  //  historyEntry.setVisible()
+                  //  historyEntry.loading.state = EmptyLoadingState.NONE
                 }
                 if (list.isNotEmpty()) historyEntry.actionButton.setVisible() else historyEntry.actionButton.setGone()
             }

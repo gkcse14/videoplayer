@@ -136,7 +136,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="#4D000000"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     vlc:layout_constraintBottom_toBottomOf="@id/ml_item_thumbnail"
                     vlc:layout_constraintEnd_toEndOf="@id/ml_item_thumbnail"
                     vlc:layout_constraintStart_toStartOf="@id/ml_item_thumbnail"

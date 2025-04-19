@@ -40,15 +40,15 @@
 
     <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
             android:layout_marginBottom="24dp"
             app:layout_constraintBottom_toTopOf="@+id/permission_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            app:srcCompat="@drawable/ic_onboarding_notification" />
+            app:srcCompat="@drawable/ic_launcher" />
 
     <TextView
             android:id="@+id/permission_title"
