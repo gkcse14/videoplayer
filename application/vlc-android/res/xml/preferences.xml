@@ -118,6 +118,7 @@
             android:key="android_auto_category"
             android:fragment="org.videolan.television.ui.preferences.PreferencesAndroidAuto"/>
         <Preference
+            app:isPreferenceVisible="false"
                 android:title="@string/advanced_prefs_category"
                 android:key="adv_category"
                 android:fragment="org.videolan.television.ui.preferences.PreferencesAdvanced"/>

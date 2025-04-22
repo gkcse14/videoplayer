@@ -185,7 +185,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/donationsButton"
-                app:layout_constraintWidth_max="600dp">
+                app:layout_constraintWidth_max="600dp"
+            >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -211,7 +212,7 @@
                         android:layout_marginStart="24dp"
                         android:layout_marginEnd="16dp"
                         android:layout_weight="1"
-                        android:text="@string/official_website"
+                        android:text="Privacy Policy"
                         style="@style/About.Title"
                         app:layout_constraintBottom_toBottomOf="@+id/imageView16"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -236,7 +237,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/about_website_container"
-                app:layout_constraintWidth_max="600dp">
+                app:layout_constraintWidth_max="600dp"
+            android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -288,7 +290,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/about_report_container"
-                app:layout_constraintWidth_max="600dp">
+                app:layout_constraintWidth_max="600dp"
+                android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -388,7 +391,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/about_libraries_container"
-                app:layout_constraintWidth_max="600dp">
+                app:layout_constraintWidth_max="600dp"
+                android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

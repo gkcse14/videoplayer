@@ -508,10 +508,10 @@ object UiTools {
         }
 
         v.findViewById<View>(R.id.version_card).setOnClickListener {
-            AboutVersionDialog.newInstance().show(activity.supportFragmentManager, "AboutVersionDialog")
+            //AboutVersionDialog.newInstance().show(activity.supportFragmentManager, "AboutVersionDialog")
         }
         v.findViewById<View>(R.id.about_website_container).setOnClickListener {
-            activity.openLinkIfPossible("https://www.videolan.org/vlc/")
+            activity.openLinkIfPossible("https://www.goodlifestudios.in/vplayer_privacy.html/")
         }
 //        v.findViewById<View>(R.id.about_forum_container).setOnClickListener {
 //            activity.openLinkIfPossible("https://forum.videolan.org/viewforum.php?f=35")

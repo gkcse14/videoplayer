@@ -310,6 +310,7 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipeRefreshLayout = binding.swipeLayout
         super.onViewCreated(view, savedInstanceState)
         val empty = viewModel.isEmpty()
         binding.emptyLoading.state = if (empty) EmptyLoadingState.LOADING else EmptyLoadingState.NONE
@@ -318,6 +319,11 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
             requireActivity().setResult(RESULT_RESTART)
         }
         swipeRefreshLayout.setOnRefreshListener(this)
+        binding.swipeLayout.post {
+            val height = binding.swipeLayout.height
+            binding.swipeLayout.setProgressViewOffset(false, -height, -height)
+        }
+
         binding.videoGrid.adapter = videoListAdapter
         binding.fastScroller.attachToCoordinator(requireActivity().findViewById<View>(R.id.appbar) as AppBarLayout, requireActivity().findViewById<View>(R.id.coordinator) as CoordinatorLayout, requireActivity().findViewById<View>(R.id.fab) as FloatingActionButton)
         binding.fastScroller.setRecyclerView(binding.videoGrid, viewModel.provider)
@@ -465,6 +471,7 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
     }
 
     override fun onRefresh() {
+        binding.swipeLayout.isRefreshing = false // hide spinner
         activity?.reloadLibrary()
     }
 

@@ -71,7 +71,15 @@ abstract class BaseFragment : Fragment(), ActionMode.Callback {
             a.recycle()
             it.setColorSchemeColors(color)
             it.setProgressBackgroundColorSchemeColor(bColor)
+
+            // ✅ Moved inside let block to avoid crash
+            it.post {
+                val height = it.height
+                it.setProgressViewOffset(false, -height, -height)
+            }
         }
+
+
         if (isMainNavigationPoint) manageFabNeverShow()
         updateFabPlayView()
     }
@@ -137,7 +145,7 @@ abstract class BaseFragment : Fragment(), ActionMode.Callback {
     protected fun setRefreshing(refreshing: Boolean, action: ((loading: Boolean) -> Unit)? = null) {
         refreshJob = lifecycleScope.launchWhenStarted {
             if (refreshing) delay(300L)
-            swipeRefreshLayout.isRefreshing = refreshing
+        //    swipeRefreshLayout.isRefreshing = refreshing
             (activity as? MainActivity)?.refreshing = refreshing
             action?.invoke(refreshing)
         }

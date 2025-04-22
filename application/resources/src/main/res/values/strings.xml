@@ -308,7 +308,7 @@
     <string name="about">About</string>
     <string name="about_vlc_text">Lumo Player is a powerful and elegant video player for Android™. It supports a wide range of video and audio formats, including network streams, and delivers a smooth, user-friendly experience.</string>
     <string name="authors">Authors</string>
-    <string name="about_copyright" translatable="false">Copyleft &#169; 1996&#8211;2025 by VideoLAN</string>
+    <string name="about_copyright" translatable="false">Copyright &#169; 2025 by GoodLife Studios</string>
     <string name="about_license" translatable="false">GNU General Public License v2.0</string>
     <string name="about_license_text" translatable="false"></string>
     <string name="vlc_authors">and Lumo Player Authors.</string>
