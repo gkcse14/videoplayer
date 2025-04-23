@@ -1369,7 +1369,7 @@ fun Route.setupRouting(appContext: Context, scope: CoroutineScope) {
                 }
 
                 // nothing found . Falling back on the no media bitmap
-                appContext.getBitmapFromDrawable(R.drawable.ic_no_media, 512, 512)?.let {
+                appContext.getBitmapFromDrawable(R.drawable.ic_launcher, 512, 512)?.let {
 
                     BitmapUtil.encodeImage(it, true)?.let {
 

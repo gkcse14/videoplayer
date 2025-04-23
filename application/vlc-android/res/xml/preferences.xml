@@ -110,6 +110,7 @@
                 android:fragment="org.videolan.television.ui.preferences.PreferencesParentalControl"
                 android:title="@string/parental_control"/>
         <Preference
+            app:isPreferenceVisible="false"
                 android:title="@string/remote_access"
                 android:key="remote_access_category"
                 android:fragment="org.videolan.television.ui.preferences.PreferencesRemoteAccess"/>

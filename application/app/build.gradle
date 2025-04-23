@@ -96,8 +96,8 @@ android {
             matchingFallbacks = ['release']
         }
         debug {
-            applicationIdSuffix ".debug"
-            jniDebuggable true
+       //     applicationIdSuffix ".debug"
+        //    jniDebuggable true
         }
         dev {
             initWith debug

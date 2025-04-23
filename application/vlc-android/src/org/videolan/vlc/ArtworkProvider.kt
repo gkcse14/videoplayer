@@ -159,7 +159,7 @@ class ArtworkProvider : ContentProvider() {
             runBlocking(Dispatchers.IO) {
                 var bitmap = AudioUtil.readCoverBitmap(path, width)
                 if (bitmap != null) bitmap = padSquare(bitmap)
-                if (bitmap == null) bitmap = ctx.getBitmapFromDrawable(R.drawable.ic_no_media, width, width)
+                if (bitmap == null) bitmap = ctx.getBitmapFromDrawable(R.drawable.ic_launcher, width, width)
                 return@runBlocking BitmapUtil.encodeImage(bitmap, ENABLE_TRACING){
                     getTimestamp()
                 }
@@ -253,7 +253,7 @@ class ArtworkProvider : ContentProvider() {
                 if (padSquare && bitmap != null) bitmap = padSquare(bitmap)
                 if (bitmap == null) {
                     bitmap = ctx.getBitmapFromDrawable(fallbackIcon
-                            ?: R.drawable.ic_no_media, width, width)
+                            ?: R.drawable.ic_launcher, width, width)
                     if (isLarge && bitmap != null) {
                         val paint = Paint()
                         val bmp = Bitmap.createBitmap(width169, height169, Bitmap.Config.ARGB_8888)

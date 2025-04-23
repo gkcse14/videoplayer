@@ -65,7 +65,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
                 android:contentDescription="@string/open_vlc"
-                android:src="@drawable/ic_widget_icon" />
+                android:src="@drawable/ic_launcher" />
 
         <ImageView
                 android:id="@+id/cover_background"

@@ -1038,7 +1038,7 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
                     if (coverOnLockscreen && cover == null)
                         cover = AudioUtil.readCoverBitmap(Uri.decode(mw.artworkMrl), 256)
                     if (cover == null || cover.isRecycled)
-                        cover = ctx.getBitmapFromDrawable(R.drawable.ic_no_media)
+                        cover = ctx.getBitmapFromDrawable(R.drawable.ic_launcher)
 
                     notification = NotificationHelper.createPlaybackNotification(ctx,
                             canSwitchToVideo(), title, artist, album, cover, playing, isPausable,
@@ -1223,7 +1223,7 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
                     //In case of format not supported
                         bob.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cover.copy(cover.config, false))
                     else
-                        bob.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, ctx.getBitmapFromDrawable(R.drawable.ic_no_media, 512, 512))
+                        bob.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, ctx.getBitmapFromDrawable(R.drawable.ic_launcher, 512, 512))
                 }
             }
             return@withContext bob.build()
